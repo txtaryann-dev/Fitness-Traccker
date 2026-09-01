@@ -1,0 +1,6 @@
+{
+  "name": "Velocity",
+  "description": "A high-performance fitness and social activity tracking platform for runners, cyclists, and athletes featuring real-time GPS tracking, performance analytics, activity feed, and challenge progress.",
+  "requestFramePermissions": ["geolocation", "camera"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
