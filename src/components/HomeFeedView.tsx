@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
   Activity as ActivityIcon,
   Bike,
@@ -29,22 +29,37 @@ export const HomeFeedView: React.FC<HomeFeedViewProps> = ({
   const { activities, currentUser, setActiveTab } = useApp();
   const [filter, setFilter] = useState<FeedFilterOption>('all');
 
-  // Filter logic across sport categories
-  const filteredActivities = activities.filter((act) => {
-    if (filter === 'all') return true;
-    if (filter === 'running') return act.sportType === 'run';
-    if (filter === 'cycling') return act.sportType === 'ride';
-    if (filter === 'walking') return act.sportType === 'walk' || act.sportType === 'hike';
-    return true;
-  });
+  // Optimization (Bolt ⚡): Memoize counts calculation in a single pass over activities to avoid multiple O(N) filters on every render.
+  const counts = useMemo(() => {
+    let running = 0;
+    let cycling = 0;
+    let walking = 0;
 
-  // Calculate live counts for each filter option
-  const counts = {
-    all: activities.length,
-    running: activities.filter((a) => a.sportType === 'run').length,
-    cycling: activities.filter((a) => a.sportType === 'ride').length,
-    walking: activities.filter((a) => a.sportType === 'walk' || a.sportType === 'hike').length,
-  };
+    for (let i = 0; i < activities.length; i++) {
+      const type = activities[i].sportType;
+      if (type === 'run') running++;
+      else if (type === 'ride') cycling++;
+      else if (type === 'walk' || type === 'hike') walking++;
+    }
+
+    return {
+      all: activities.length,
+      running,
+      cycling,
+      walking,
+    };
+  }, [activities]);
+
+  // Optimization (Bolt ⚡): Memoize filtered activities list so it only recalculates when filter or activities array changes.
+  const filteredActivities = useMemo(() => {
+    if (filter === 'all') return activities;
+    return activities.filter((act) => {
+      if (filter === 'running') return act.sportType === 'run';
+      if (filter === 'cycling') return act.sportType === 'ride';
+      if (filter === 'walking') return act.sportType === 'walk' || act.sportType === 'hike';
+      return true;
+    });
+  }, [activities, filter]);
 
   const filterOptions: { id: FeedFilterOption; label: string; icon: React.ComponentType<{ className?: string }>; count: number }[] = [
     { id: 'all', label: 'All', icon: ActivityIcon, count: counts.all },
