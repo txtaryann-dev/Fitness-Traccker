@@ -79,11 +79,3 @@ Fitness-Traccker/
 ## Contributing
 
 Contributions, issues, and feature requests are welcome. Feel free to open a pull request or file an issue.
-
-## License
-
-This project currently has no license specified. Add a `LICENSE` file to define usage terms.
-
----
-
-Generated from [google-gemini/aistudio-repository-template](https://github.com/google-gemini/aistudio-repository-template).
