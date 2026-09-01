@@ -17,6 +17,7 @@ interface AppContextType {
   clubs: Club[];
   notifications: NotificationItem[];
   unitSystem: 'metric' | 'imperial';
+  theme: 'light' | 'dark';
   activeTab: 'home' | 'explore' | 'record' | 'activity' | 'profile' | 'notifications' | 'summary';
   selectedActivity: Activity | null;
   workoutSummaryActivity: Activity | null;
@@ -25,6 +26,8 @@ interface AppContextType {
   setSelectedActivity: (activity: Activity | null) => void;
   setWorkoutSummaryActivity: (activity: Activity | null) => void;
   toggleUnitSystem: () => void;
+  toggleTheme: () => void;
+  setTheme: (theme: 'light' | 'dark') => void;
   toggleLike: (activityId: string) => void;
   addComment: (activityId: string, text: string) => void;
   addActivity: (activity: Partial<Activity>) => Activity;
@@ -77,9 +80,26 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     getStored('notifications', INITIAL_NOTIFICATIONS)
   );
   const [unitSystem, setUnitSystem] = useState<'metric' | 'imperial'>('metric');
+  const [theme, setThemeState] = useState<'light' | 'dark'>(() => {
+    const saved = getStored<'light' | 'dark' | null>('theme', null);
+    if (saved) return saved;
+    if (typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      return 'dark';
+    }
+    return 'light';
+  });
   const [activeTab, setActiveTab] = useState<'home' | 'explore' | 'record' | 'activity' | 'profile' | 'notifications' | 'summary'>('home');
   const [selectedActivity, setSelectedActivity] = useState<Activity | null>(null);
   const [workoutSummaryActivity, setWorkoutSummaryActivity] = useState<Activity | null>(null);
+
+  useEffect(() => {
+    setStored('theme', theme);
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [theme]);
 
   useEffect(() => {
     setStored('user', currentUser);
@@ -109,6 +129,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const toggleUnitSystem = () => {
     setUnitSystem((prev) => (prev === 'metric' ? 'imperial' : 'metric'));
+  };
+
+  const toggleTheme = () => {
+    setThemeState((prev) => (prev === 'light' ? 'dark' : 'light'));
+  };
+
+  const setTheme = (newTheme: 'light' | 'dark') => {
+    setThemeState(newTheme);
   };
 
   const formatDistance = (km: number) => {
@@ -252,6 +280,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         clubs,
         notifications,
         unitSystem,
+        theme,
         activeTab,
         selectedActivity,
         workoutSummaryActivity,
@@ -260,6 +289,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         setSelectedActivity,
         setWorkoutSummaryActivity,
         toggleUnitSystem,
+        toggleTheme,
+        setTheme,
         toggleLike,
         addComment,
         addActivity,

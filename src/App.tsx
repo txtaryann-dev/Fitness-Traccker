@@ -42,14 +42,14 @@ const AppContent: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] text-[#0F172A] flex flex-col font-sans selection:bg-[#FF5600] selection:text-white">
+    <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#0B0F17] text-[#0F172A] dark:text-[#F8FAFC] flex flex-col font-sans transition-colors duration-200 selection:bg-[#FF5600] selection:text-white">
       {/* Top and Mobile Navigation (hidden on full-screen workout recording or summary) */}
       {activeTab !== 'record' && activeTab !== 'summary' && (
         <Navbar onOpenRecord={handleOpenRecord} />
       )}
 
       {/* Main Viewport Container */}
-      <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+      <main className="flex-1 w-full max-w-6xl mx-auto px-3 sm:px-5 lg:px-6 pt-4 pb-8">
         {activeTab === 'home' && (
           <HomeFeedView
             onOpenRecord={handleOpenRecord}

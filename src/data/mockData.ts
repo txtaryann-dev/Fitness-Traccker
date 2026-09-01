@@ -405,6 +405,55 @@ export const INITIAL_ACTIVITIES: Activity[] = [
     likes: ['user_alex_mercer', 'user_sarah_j'],
     comments: [],
   },
+  {
+    id: 'act-elena-evening-walk',
+    userId: 'user_elena_r',
+    userName: 'Elena Rostova',
+    userAvatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=300&auto=format&fit=crop&q=80',
+    title: 'Sunset Scenic Walk',
+    description: 'Relaxing recovery walk through Central Park after yesterday’s long ride. Beautiful golden hour.',
+    sportType: 'walk',
+    distance: 4.6,
+    duration: 3300, // 55m
+    avgPace: '11:57 /km',
+    elevationGain: 35,
+    calories: 260,
+    achievementsCount: 1,
+    location: 'New York, NY',
+    timestamp: 'Yesterday at 5:45 PM · Evening Walk',
+    createdAt: Date.now() - 1000 * 60 * 60 * 28,
+    routeCoordinates: [
+      { lat: 40.7829, lng: -73.9654 },
+      { lat: 40.7870, lng: -73.9630 },
+      { lat: 40.7920, lng: -73.9580 },
+      { lat: 40.7880, lng: -73.9520 },
+      { lat: 40.7810, lng: -73.9600 },
+    ],
+    pacePoints: [
+      { time: 0, pace: 12.2, elevation: 40 },
+      { time: 15, pace: 11.8, elevation: 45 },
+      { time: 30, pace: 12.0, elevation: 52 },
+      { time: 45, pace: 11.5, elevation: 42 },
+      { time: 55, pace: 11.9, elevation: 38 },
+    ],
+    splits: [
+      { split: 1, pace: '12:05', elevationChange: '+10m', time: '12:05' },
+      { split: 2, pace: '11:50', elevationChange: '+15m', time: '11:50' },
+      { split: 3, pace: '12:10', elevationChange: '-5m', time: '12:10' },
+      { split: 4.6, pace: '11:42', elevationChange: '-10m', time: '18:55' },
+    ],
+    likes: ['user_alex_mercer', 'user_marcus_rivera'],
+    comments: [
+      {
+        id: 'c4',
+        userId: 'user_alex_mercer',
+        userName: 'Alex Mercer',
+        userAvatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&auto=format&fit=crop&q=80',
+        text: 'Recovery miles are just as important! Great route 👌',
+        timestamp: '1 day ago',
+      },
+    ],
+  },
 ];
 
 export const INITIAL_NOTIFICATIONS: NotificationItem[] = [

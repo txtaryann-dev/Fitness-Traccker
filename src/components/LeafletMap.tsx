@@ -3,7 +3,7 @@ import L from 'leaflet';
 import { Compass, Layers, LocateFixed, Map as MapIcon } from 'lucide-react';
 import { LatLng } from '../types';
 
-export type MapTileStyle = 'streets' | 'satellite' | 'outdoors';
+export type MapTileStyle = 'streets' | 'dark' | 'satellite' | 'outdoors';
 
 interface LeafletMapProps {
   coordinates: LatLng[];
@@ -23,6 +23,11 @@ interface LeafletMapProps {
 const TILE_LAYERS: Record<MapTileStyle, { url: string; maxZoom: number; subdomains?: string; attribution?: string }> = {
   streets: {
     url: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
+    maxZoom: 19,
+    subdomains: 'abcd',
+  },
+  dark: {
+    url: 'https://{s}.basemaps.cartocdn.com/rastertiles/dark_all/{z}/{x}/{y}{r}.png',
     maxZoom: 19,
     subdomains: 'abcd',
   },
@@ -328,29 +333,29 @@ export const LeafletMap: React.FC<LeafletMapProps> = ({
 
       {/* Floating Map Controls overlay when interactive or enabled */}
       {interactive && (
-        <div className="absolute top-4 right-4 z-20 flex flex-col gap-2 pointer-events-auto">
+        <div className="absolute top-3 right-3 z-20 flex flex-col gap-1.5 pointer-events-auto">
           {/* Layer Style Switcher */}
           {enableLayerSwitcher && (
             <div className="relative">
               <button
                 type="button"
                 onClick={() => setShowStyleMenu(!showStyleMenu)}
-                className="w-9 h-9 rounded-lg bg-white/95 backdrop-blur-md border border-[#E2E8F0] shadow-md flex items-center justify-center text-[#0F172A] hover:bg-[#F8FAFC] transition-colors"
+                className="w-8 h-8 rounded-lg bg-white/95 dark:bg-[#151D2A]/95 backdrop-blur-md border border-[#E2E8F0] dark:border-[#334155] shadow-xs flex items-center justify-center text-[#0F172A] dark:text-white hover:bg-[#F8FAFC] dark:hover:bg-[#1E293B] transition-colors"
                 title="Change Map Style"
               >
-                <Layers className="w-4 h-4" />
+                <Layers className="w-3.5 h-3.5" />
               </button>
 
               {showStyleMenu && (
-                <div className="absolute right-0 mt-1.5 w-36 bg-white rounded-xl border border-[#E2E8F0] shadow-xl p-1.5 flex flex-col gap-1 z-30 animate-in fade-in zoom-in-95 duration-150">
+                <div className="absolute right-0 mt-1 w-32 bg-white dark:bg-[#151D2A] rounded-lg border border-[#E2E8F0] dark:border-[#334155] shadow-lg p-1 flex flex-col gap-0.5 z-30 animate-in fade-in duration-100">
                   <button
                     type="button"
                     onClick={() => {
                       setActiveStyle('streets');
                       setShowStyleMenu(false);
                     }}
-                    className={`px-2.5 py-1.5 text-xs font-semibold rounded-lg text-left transition-colors ${
-                      activeStyle === 'streets' ? 'bg-[#FF5600] text-white' : 'text-[#0F172A] hover:bg-[#F1F5F9]'
+                    className={`px-2 py-1 text-[11px] font-semibold rounded-md text-left transition-colors ${
+                      activeStyle === 'streets' ? 'bg-[#FF5600] text-white' : 'text-[#0F172A] dark:text-white hover:bg-[#F1F5F9] dark:hover:bg-[#1E293B]'
                     }`}
                   >
                     Street Map
@@ -358,14 +363,26 @@ export const LeafletMap: React.FC<LeafletMapProps> = ({
                   <button
                     type="button"
                     onClick={() => {
+                      setActiveStyle('dark');
+                      setShowStyleMenu(false);
+                    }}
+                    className={`px-2 py-1 text-[11px] font-semibold rounded-md text-left transition-colors ${
+                      activeStyle === 'dark' ? 'bg-[#FF5600] text-white' : 'text-[#0F172A] dark:text-white hover:bg-[#F1F5F9] dark:hover:bg-[#1E293B]'
+                    }`}
+                  >
+                    Dark Map
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
                       setActiveStyle('satellite');
                       setShowStyleMenu(false);
                     }}
-                    className={`px-2.5 py-1.5 text-xs font-semibold rounded-lg text-left transition-colors ${
-                      activeStyle === 'satellite' ? 'bg-[#FF5600] text-white' : 'text-[#0F172A] hover:bg-[#F1F5F9]'
+                    className={`px-2 py-1 text-[11px] font-semibold rounded-md text-left transition-colors ${
+                      activeStyle === 'satellite' ? 'bg-[#FF5600] text-white' : 'text-[#0F172A] dark:text-white hover:bg-[#F1F5F9] dark:hover:bg-[#1E293B]'
                     }`}
                   >
-                    Satellite View
+                    Satellite
                   </button>
                   <button
                     type="button"
@@ -373,11 +390,11 @@ export const LeafletMap: React.FC<LeafletMapProps> = ({
                       setActiveStyle('outdoors');
                       setShowStyleMenu(false);
                     }}
-                    className={`px-2.5 py-1.5 text-xs font-semibold rounded-lg text-left transition-colors ${
-                      activeStyle === 'outdoors' ? 'bg-[#FF5600] text-white' : 'text-[#0F172A] hover:bg-[#F1F5F9]'
+                    className={`px-2 py-1 text-[11px] font-semibold rounded-md text-left transition-colors ${
+                      activeStyle === 'outdoors' ? 'bg-[#FF5600] text-white' : 'text-[#0F172A] dark:text-white hover:bg-[#F1F5F9] dark:hover:bg-[#1E293B]'
                     }`}
                   >
-                    OpenStreet
+                    Terrain
                   </button>
                 </div>
               )}
@@ -389,23 +406,23 @@ export const LeafletMap: React.FC<LeafletMapProps> = ({
             <button
               type="button"
               onClick={handleRecenter}
-              className={`w-9 h-9 rounded-lg border shadow-md flex items-center justify-center transition-all ${
+              className={`w-8 h-8 rounded-lg border shadow-xs flex items-center justify-center transition-all ${
                 isFollowingGps
                   ? 'bg-[#0059b0] text-white border-[#0059b0]'
-                  : 'bg-white/95 text-[#64748B] border-[#E2E8F0] hover:text-[#0F172A]'
+                  : 'bg-white/95 dark:bg-[#151D2A]/95 text-[#64748B] dark:text-[#94A3B8] border-[#E2E8F0] dark:border-[#334155] hover:text-[#0F172A] dark:hover:text-white'
               }`}
               title={isFollowingGps ? 'Locking on GPS Position' : 'Recenter on my GPS'}
             >
-              <LocateFixed className="w-4 h-4" />
+              <LocateFixed className="w-3.5 h-3.5" />
             </button>
           )}
 
           {/* Zoom In / Out */}
-          <div className="flex flex-col rounded-lg overflow-hidden border border-[#E2E8F0] shadow-md bg-white/95 backdrop-blur-md">
+          <div className="flex flex-col rounded-lg overflow-hidden border border-[#E2E8F0] dark:border-[#334155] shadow-xs bg-white/95 dark:bg-[#151D2A]/95 backdrop-blur-md">
             <button
               type="button"
               onClick={handleZoomIn}
-              className="w-9 h-8 flex items-center justify-center text-[#0F172A] font-bold text-base hover:bg-[#F1F5F9] border-b border-[#E2E8F0]"
+              className="w-8 h-7 flex items-center justify-center text-[#0F172A] dark:text-white font-bold text-sm hover:bg-[#F1F5F9] dark:hover:bg-[#1E293B] border-b border-[#E2E8F0] dark:border-[#334155]"
               title="Zoom in"
             >
               +
@@ -413,7 +430,7 @@ export const LeafletMap: React.FC<LeafletMapProps> = ({
             <button
               type="button"
               onClick={handleZoomOut}
-              className="w-9 h-8 flex items-center justify-center text-[#0F172A] font-bold text-base hover:bg-[#F1F5F9]"
+              className="w-8 h-7 flex items-center justify-center text-[#0F172A] dark:text-white font-bold text-sm hover:bg-[#F1F5F9] dark:hover:bg-[#1E293B]"
               title="Zoom out"
             >
               −

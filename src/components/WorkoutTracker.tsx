@@ -485,20 +485,19 @@ export const WorkoutTracker: React.FC<WorkoutTrackerProps> = ({
     switch (gpsState) {
       case 'locked':
         return (
-          <div className="flex items-center gap-2 bg-white/95 rounded-full py-1.5 px-3.5 border border-[#E2E8F0] shadow-sm">
-            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.7)]" />
-            <SignalHigh className="w-3.5 h-3.5 text-emerald-600" />
-            <span className="text-xs font-bold text-[#0F172A] uppercase tracking-wider">
-              GPS ±{gpsAccuracyMeters || 4}m
+          <div className="flex items-center gap-1.5 bg-emerald-50 dark:bg-emerald-950/60 rounded-full py-1 px-2.5 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 shadow-xs">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+            <SignalHigh className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
+            <span className="text-[10px] font-bold uppercase tracking-wider">
+              GPS ±{gpsAccuracyMeters || 8}m
             </span>
           </div>
         );
       case 'weak':
         return (
-          <div className="flex items-center gap-2 bg-white/95 rounded-full py-1.5 px-3.5 border border-[#E2E8F0] shadow-sm">
-            <span className="w-2.5 h-2.5 rounded-full bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.5)]" />
-            <SignalMedium className="w-3.5 h-3.5 text-amber-600" />
-            <span className="text-xs font-bold text-[#0F172A] uppercase tracking-wider">
+          <div className="flex items-center gap-1.5 bg-amber-50 dark:bg-amber-950/60 rounded-full py-1 px-2.5 border border-amber-200 dark:border-amber-800 text-amber-800 dark:text-amber-300 shadow-xs">
+            <SignalMedium className="w-3 h-3 text-amber-600 dark:text-amber-400" />
+            <span className="text-[10px] font-bold uppercase tracking-wider">
               GPS ±{gpsAccuracyMeters || 30}m
             </span>
           </div>
@@ -507,31 +506,31 @@ export const WorkoutTracker: React.FC<WorkoutTrackerProps> = ({
         return (
           <button
             onClick={requestGpsPosition}
-            className="flex items-center gap-2 bg-red-50 hover:bg-red-100 rounded-full py-1.5 px-3.5 border border-red-200 shadow-sm transition-colors text-red-700"
+            className="flex items-center gap-1.5 bg-red-50 dark:bg-red-950/60 hover:bg-red-100 rounded-full py-1 px-2.5 border border-red-200 dark:border-red-800 shadow-xs transition-colors text-red-700 dark:text-red-300"
             title="Click to grant location permission"
           >
-            <AlertCircle className="w-3.5 h-3.5 text-red-600" />
-            <span className="text-xs font-bold uppercase tracking-wider">
-              GPS Blocked • Tap to Retry
+            <AlertCircle className="w-3 h-3 text-red-600 dark:text-red-400" />
+            <span className="text-[10px] font-bold uppercase tracking-wider">
+              GPS Blocked • Retry
             </span>
           </button>
         );
       case 'unsupported':
         return (
-          <div className="flex items-center gap-2 bg-amber-50 rounded-full py-1.5 px-3.5 border border-amber-200 text-amber-800">
-            <AlertCircle className="w-3.5 h-3.5 text-amber-600" />
-            <span className="text-xs font-bold uppercase tracking-wider">
-              No Hardware GPS
+          <div className="flex items-center gap-1.5 bg-amber-50 dark:bg-amber-950/60 rounded-full py-1 px-2.5 border border-amber-200 dark:border-amber-800 text-amber-800 dark:text-amber-300">
+            <AlertCircle className="w-3 h-3 text-amber-600 dark:text-amber-400" />
+            <span className="text-[10px] font-bold uppercase tracking-wider">
+              No GPS
             </span>
           </div>
         );
       case 'searching':
       default:
         return (
-          <div className="flex items-center gap-2 bg-white/95 rounded-full py-1.5 px-3.5 border border-[#E2E8F0] shadow-sm">
-            <span className="w-2.5 h-2.5 rounded-full bg-[#0059b0] animate-ping shadow-[0_0_8px_rgba(0,89,176,0.6)]" />
-            <SignalLow className="w-3.5 h-3.5 text-[#0059b0]" />
-            <span className="text-xs font-bold text-[#0F172A] uppercase tracking-wider">
+          <div className="flex items-center gap-1.5 bg-white/95 dark:bg-[#151D2A]/95 rounded-full py-1 px-2.5 border border-[#E2E8F0] dark:border-[#334155] shadow-xs">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#0059b0] animate-ping" />
+            <SignalLow className="w-3 h-3 text-[#0059b0] dark:text-blue-400" />
+            <span className="text-[10px] font-bold text-[#0F172A] dark:text-white uppercase tracking-wider">
               Acquiring GPS...
             </span>
           </div>
@@ -540,7 +539,7 @@ export const WorkoutTracker: React.FC<WorkoutTrackerProps> = ({
   };
 
   return (
-    <div className="relative min-h-[calc(100vh-4rem)] md:min-h-[85vh] flex flex-col justify-between overflow-hidden bg-[#001b3e]/90 text-[#0F172A] rounded-2xl border border-[#E2E8F0] shadow-xl">
+    <div className="relative min-h-[calc(100vh-6rem)] md:min-h-[80vh] flex flex-col justify-between overflow-hidden bg-slate-900 text-[#0F172A] dark:text-white rounded-xl border border-[#E2E8F0] dark:border-[#1E293B] shadow-lg">
       {/* Background Interactive Live Map with Real GPS Layer & Controls */}
       <div className="absolute inset-0 z-0 opacity-90">
         <LeafletMap
@@ -556,66 +555,66 @@ export const WorkoutTracker: React.FC<WorkoutTrackerProps> = ({
           mapId="tracker-live-map"
         />
         {/* Soft gradient for high contrast UI readability */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#f8f9ff]/75 via-[#f8f9ff]/25 to-[#f8f9ff]/90 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#f8f9ff]/75 dark:from-[#0F172A]/80 via-transparent to-[#f8f9ff]/85 dark:to-[#0F172A]/90 pointer-events-none" />
       </div>
 
       {/* Top Navigation & Live GPS Status Header */}
-      <header className="relative z-10 w-full flex flex-wrap justify-between items-center gap-3 px-4 md:px-8 py-3.5 backdrop-blur-md bg-white/80 border-b border-[#E2E8F0]/80">
+      <header className="relative z-10 w-full flex flex-wrap justify-between items-center gap-2 px-3.5 md:px-5 py-2.5 backdrop-blur-md bg-white/85 dark:bg-[#151D2A]/85 border-b border-[#E2E8F0]/80 dark:border-[#1E293B]/80">
         {/* GPS Status Indicator */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5">
           {renderGpsStatusBadge()}
 
           {/* Mode Switcher Pill (Live Hardware GPS vs Simulation Test) */}
           <button
             onClick={() => setUseSimulationMode(!useSimulationMode)}
-            className={`text-[11px] font-bold px-2.5 py-1 rounded-full border transition-colors ${
+            className={`text-[10px] font-bold px-2 py-0.5 rounded-full border transition-colors ${
               useSimulationMode
-                ? 'bg-amber-100 text-amber-900 border-amber-300'
-                : 'bg-white/90 text-[#64748B] border-[#E2E8F0] hover:text-[#0F172A]'
+                ? 'bg-amber-100 dark:bg-amber-950/60 text-amber-900 dark:text-amber-300 border-amber-300 dark:border-amber-800'
+                : 'bg-white/90 dark:bg-[#1E293B] text-[#64748B] dark:text-[#94A3B8] border-[#E2E8F0] dark:border-[#334155] hover:text-[#0F172A] dark:hover:text-white'
             }`}
             title="Toggle simulated movement for indoor testing"
           >
-            {useSimulationMode ? 'Indoor Test Mode ON' : 'Live GPS Mode'}
+            {useSimulationMode ? 'Indoor Test ON' : 'Live GPS'}
           </button>
         </div>
 
         {/* Sport Type Selector & App Brand */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
           {status === 'idle' ? (
-            <div className="flex items-center bg-white/95 p-1 rounded-lg border border-[#E2E8F0] shadow-sm">
+            <div className="flex items-center bg-white/95 dark:bg-[#1E293B] p-0.5 rounded-lg border border-[#E2E8F0] dark:border-[#334155] shadow-xs">
               <button
                 onClick={() => setSportType('run')}
-                className={`px-3 py-1 text-xs font-bold rounded-md flex items-center gap-1 transition-colors ${
-                  sportType === 'run' ? 'bg-[#FF5600] text-white' : 'text-[#64748B] hover:text-[#0F172A]'
+                className={`px-2.5 py-1 text-[11px] font-bold rounded-md flex items-center gap-1 transition-colors ${
+                  sportType === 'run' ? 'bg-[#FF5600] text-white shadow-xs' : 'text-[#64748B] dark:text-[#94A3B8] hover:text-[#0F172A] dark:hover:text-white'
                 }`}
               >
-                <Zap className="w-3.5 h-3.5" /> Run
+                <Zap className="w-3 h-3" /> Run
               </button>
               <button
                 onClick={() => setSportType('ride')}
-                className={`px-3 py-1 text-xs font-bold rounded-md flex items-center gap-1 transition-colors ${
-                  sportType === 'ride' ? 'bg-[#FF5600] text-white' : 'text-[#64748B] hover:text-[#0F172A]'
+                className={`px-2.5 py-1 text-[11px] font-bold rounded-md flex items-center gap-1 transition-colors ${
+                  sportType === 'ride' ? 'bg-[#FF5600] text-white shadow-xs' : 'text-[#64748B] dark:text-[#94A3B8] hover:text-[#0F172A] dark:hover:text-white'
                 }`}
               >
-                <Bike className="w-3.5 h-3.5" /> Ride
+                <Bike className="w-3 h-3" /> Ride
               </button>
               <button
                 onClick={() => setSportType('walk')}
-                className={`px-3 py-1 text-xs font-bold rounded-md flex items-center gap-1 transition-colors ${
-                  sportType === 'walk' ? 'bg-[#FF5600] text-white' : 'text-[#64748B] hover:text-[#0F172A]'
+                className={`px-2.5 py-1 text-[11px] font-bold rounded-md flex items-center gap-1 transition-colors ${
+                  sportType === 'walk' ? 'bg-[#FF5600] text-white shadow-xs' : 'text-[#64748B] dark:text-[#94A3B8] hover:text-[#0F172A] dark:hover:text-white'
                 }`}
               >
-                <Footprints className="w-3.5 h-3.5" /> Walk
+                <Footprints className="w-3 h-3" /> Walk
               </button>
             </div>
           ) : (
-            <span className="px-3 py-1 rounded-full bg-[#FF5600] text-white text-xs font-bold uppercase tracking-wider shadow-sm flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-white animate-pulse" />
+            <span className="px-2.5 py-0.5 rounded-full bg-[#FF5600] text-white text-[11px] font-bold uppercase tracking-wider shadow-xs flex items-center gap-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
               {sportType}
             </span>
           )}
 
-          <span className="font-black text-xl italic tracking-tight text-[#FF5600] hidden sm:inline">
+          <span className="font-black text-sm italic tracking-tight text-[#FF5600] hidden sm:inline">
             VELOCITY
           </span>
         </div>
@@ -623,16 +622,16 @@ export const WorkoutTracker: React.FC<WorkoutTrackerProps> = ({
 
       {/* Geolocation Permission Alert Prompt if Denied */}
       {gpsState === 'denied' && (
-        <div className="relative z-10 mx-4 md:mx-8 mt-3 bg-red-50/95 backdrop-blur-md border border-red-200 rounded-xl p-3.5 flex items-center justify-between text-red-900 text-xs shadow-sm">
+        <div className="relative z-10 mx-3 md:mx-6 mt-2 bg-red-50/95 dark:bg-red-950/90 backdrop-blur-md border border-red-200 dark:border-red-800 rounded-lg p-2.5 flex items-center justify-between text-red-900 dark:text-red-200 text-xs shadow-xs">
           <div className="flex items-center gap-2">
-            <AlertCircle className="w-4 h-4 text-red-600 shrink-0" />
+            <AlertCircle className="w-4 h-4 text-red-600 dark:text-red-400 shrink-0" />
             <span>
-              <strong>Location Access Required:</strong> Please allow location permissions in your browser bar to record your real GPS path and pace accurately.
+              <strong>Location Access Required:</strong> Please allow location permissions in your browser to record GPS accurately.
             </span>
           </div>
           <button
             onClick={requestGpsPosition}
-            className="px-3 py-1 bg-red-600 text-white font-bold rounded-md shrink-0 hover:bg-red-700 transition-colors ml-2"
+            className="px-2.5 py-1 bg-red-600 text-white font-bold rounded-md shrink-0 hover:bg-red-700 transition-colors text-[11px] ml-2"
           >
             Allow GPS
           </button>
@@ -640,90 +639,90 @@ export const WorkoutTracker: React.FC<WorkoutTrackerProps> = ({
       )}
 
       {/* Main Center Canvas: Primary Distance HUD */}
-      <main className="relative z-10 flex flex-col items-center justify-center px-4 py-6 my-auto">
-        <div className="text-center bg-white/90 backdrop-blur-xl rounded-3xl p-6 md:p-10 border border-[#E2E8F0] shadow-2xl max-w-md w-full">
-          <span className="block text-xs font-bold text-[#64748B] uppercase tracking-widest mb-1">
+      <main className="relative z-10 flex flex-col items-center justify-center px-4 py-4 my-auto">
+        <div className="text-center bg-white/90 dark:bg-[#151D2A]/90 backdrop-blur-xl rounded-2xl p-5 md:p-7 border border-[#E2E8F0] dark:border-[#1E293B] shadow-xl max-w-sm w-full">
+          <span className="block text-[10px] font-bold text-[#64748B] dark:text-[#94A3B8] uppercase tracking-widest mb-0.5">
             GPS DISTANCE
           </span>
-          <div className="flex items-baseline justify-center gap-2">
-            <span className="text-[64px] md:text-[84px] font-extrabold leading-none text-[#0059b0] tracking-tighter">
+          <div className="flex items-baseline justify-center gap-1.5">
+            <span className="text-5xl md:text-6xl font-black leading-none text-[#0059b0] dark:text-blue-400 tracking-tight font-mono">
               {distFormatted.value}
             </span>
-            <span className="text-2xl font-bold text-[#64748B]">{distFormatted.unit}</span>
+            <span className="text-lg font-bold text-[#64748B] dark:text-[#94A3B8]">{distFormatted.unit}</span>
           </div>
 
-          <div className="flex items-center justify-center gap-2 text-xs text-[#64748B] mt-2 font-medium">
-            <MapPin className="w-3.5 h-3.5 text-[#FF5600]" />
-            <span className="truncate max-w-[280px]">{resolvedLocationName}</span>
+          <div className="flex items-center justify-center gap-1.5 text-[11px] text-[#64748B] dark:text-[#94A3B8] mt-1.5 font-medium">
+            <MapPin className="w-3 h-3 text-[#FF5600]" />
+            <span className="truncate max-w-[240px]">{resolvedLocationName}</span>
           </div>
 
           {status === 'idle' && (
-            <p className="text-xs text-[#64748B] mt-4 border-t border-[#E2E8F0] pt-3">
-              Press <strong>Start</strong> below to begin real GPS route tracking and performance logging.
+            <p className="text-[11px] text-[#64748B] dark:text-[#94A3B8] mt-3 border-t border-[#E2E8F0] dark:border-[#1E293B] pt-2.5">
+              Press <strong>Start</strong> below to begin real GPS route tracking.
             </p>
           )}
         </div>
       </main>
 
       {/* Secondary Metrics Card + Live Controls */}
-      <footer className="relative z-10 px-4 md:px-8 pb-8 pt-2 max-w-2xl mx-auto w-full">
+      <footer className="relative z-10 px-3 md:px-6 pb-6 pt-1 max-w-xl mx-auto w-full">
         {/* Secondary 3-Metric Glass Grid */}
-        <div className="grid grid-cols-3 gap-2 bg-white/95 backdrop-blur-xl rounded-2xl p-4 md:p-5 border border-[#E2E8F0] shadow-lg mb-6">
+        <div className="grid grid-cols-3 gap-1.5 bg-white/95 dark:bg-[#151D2A]/95 backdrop-blur-xl rounded-xl p-3 md:p-3.5 border border-[#E2E8F0] dark:border-[#1E293B] shadow-md mb-4">
           <div className="flex flex-col items-center text-center">
-            <div className="flex items-center gap-1 text-[#0059b0] mb-1">
-              <Timer className="w-4 h-4" />
-              <span className="text-[10px] font-bold text-[#64748B] uppercase tracking-wider">
+            <div className="flex items-center gap-1 text-[#0059b0] dark:text-blue-400 mb-0.5">
+              <Timer className="w-3 h-3" />
+              <span className="text-[9px] font-bold text-[#64748B] dark:text-[#94A3B8] uppercase tracking-wider">
                 TIME
               </span>
             </div>
-            <span className="text-xl md:text-2xl font-black text-[#0F172A]">
+            <span className="text-base sm:text-lg font-black text-[#0F172A] dark:text-white font-mono">
               {formatTime(seconds)}
             </span>
           </div>
 
-          <div className="flex flex-col items-center text-center border-x border-[#E2E8F0] px-2">
-            <div className="flex items-center gap-1 text-[#0059b0] mb-1">
-              <Zap className="w-4 h-4" />
-              <span className="text-[10px] font-bold text-[#64748B] uppercase tracking-wider">
+          <div className="flex flex-col items-center text-center border-x border-[#E2E8F0] dark:border-[#1E293B] px-1">
+            <div className="flex items-center gap-1 text-[#0059b0] dark:text-blue-400 mb-0.5">
+              <Zap className="w-3 h-3" />
+              <span className="text-[9px] font-bold text-[#64748B] dark:text-[#94A3B8] uppercase tracking-wider">
                 {sportType === 'ride' ? 'SPEED' : 'PACE'}
               </span>
             </div>
-            <span className="text-xl md:text-2xl font-black text-[#0F172A]">
+            <span className="text-base sm:text-lg font-black text-[#0F172A] dark:text-white font-mono">
               {getPaceDisplay()}
             </span>
           </div>
 
           <div className="flex flex-col items-center text-center">
-            <div className="flex items-center gap-1 text-red-500 mb-1">
-              <Heart className="w-4 h-4 fill-red-500 animate-pulse" />
-              <span className="text-[10px] font-bold text-[#64748B] uppercase tracking-wider">
+            <div className="flex items-center gap-1 text-red-500 mb-0.5">
+              <Heart className="w-3 h-3 fill-red-500 animate-pulse" />
+              <span className="text-[9px] font-bold text-[#64748B] dark:text-[#94A3B8] uppercase tracking-wider">
                 BPM
               </span>
             </div>
-            <span className="text-xl md:text-2xl font-black text-[#0F172A]">
+            <span className="text-base sm:text-lg font-black text-[#0F172A] dark:text-white font-mono">
               {status === 'recording' ? heartRate : '--'}
             </span>
           </div>
         </div>
 
         {/* Live Controls */}
-        <div className="flex justify-center items-center gap-6">
+        <div className="flex justify-center items-center gap-4">
           {status === 'idle' ? (
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3">
               <button
                 onClick={onCancel}
-                className="px-6 py-4 rounded-full border border-[#E2E8F0] bg-white text-[#64748B] font-bold text-sm hover:bg-[#F1F5F9] transition-all shadow-md"
+                className="px-4 py-2.5 rounded-full border border-[#E2E8F0] dark:border-[#334155] bg-white dark:bg-[#151D2A] text-[#64748B] dark:text-[#94A3B8] font-bold text-xs hover:bg-[#F1F5F9] dark:hover:bg-[#1E293B] transition-all shadow-xs"
               >
                 Exit
               </button>
 
               <button
                 onClick={handleStart}
-                className="w-24 h-24 rounded-full bg-[#FF5600] text-white flex items-center justify-center hover:bg-[#E04D00] transition-all shadow-[0_6px_24px_rgba(255,86,0,0.4)] hover:scale-105 active:scale-95 duration-150"
+                className="w-16 h-16 rounded-full bg-[#FF5600] text-white flex items-center justify-center hover:bg-[#E04D00] transition-all shadow-[0_4px_16px_rgba(255,86,0,0.35)] hover:scale-105 active:scale-95 duration-150"
               >
                 <div className="flex flex-col items-center">
-                  <Play className="w-8 h-8 fill-white ml-1" />
-                  <span className="text-[10px] font-bold mt-0.5 uppercase tracking-wider">START</span>
+                  <Play className="w-5 h-5 fill-white ml-0.5" />
+                  <span className="text-[9px] font-bold uppercase tracking-wider">START</span>
                 </div>
               </button>
             </div>
@@ -732,40 +731,40 @@ export const WorkoutTracker: React.FC<WorkoutTrackerProps> = ({
               {/* Stop & Finish Button */}
               <button
                 onClick={handleFinish}
-                className="w-16 h-16 rounded-full border border-[#E2E8F0] bg-white text-[#0F172A] flex items-center justify-center hover:bg-red-50 hover:text-red-600 transition-colors shadow-md active:scale-95"
+                className="w-12 h-12 rounded-full border border-[#E2E8F0] dark:border-[#334155] bg-white dark:bg-[#151D2A] text-[#0F172A] dark:text-white flex items-center justify-center hover:bg-red-50 dark:hover:bg-red-950/40 hover:text-red-600 transition-colors shadow-xs active:scale-95"
                 title="Finish workout"
               >
-                <Square className="w-6 h-6 fill-current" />
+                <Square className="w-4 h-4 fill-current" />
               </button>
 
               {/* Pause / Resume Button */}
               {status === 'recording' ? (
                 <button
                   onClick={handlePause}
-                  className="w-24 h-24 rounded-full bg-[#0059b0] text-white flex items-center justify-center hover:bg-[#00488f] transition-all shadow-[0_6px_24px_rgba(0,89,176,0.4)] hover:scale-105 active:scale-95 duration-150"
+                  className="w-16 h-16 rounded-full bg-[#0059b0] text-white flex items-center justify-center hover:bg-[#00488f] transition-all shadow-[0_4px_16px_rgba(0,89,176,0.35)] hover:scale-105 active:scale-95 duration-150"
                   title="Pause workout"
                 >
-                  <Pause className="w-10 h-10 fill-white" />
+                  <Pause className="w-6 h-6 fill-white" />
                 </button>
               ) : (
                 <button
                   onClick={handleResume}
-                  className="w-24 h-24 rounded-full bg-[#FF5600] text-white flex items-center justify-center hover:bg-[#E04D00] transition-all shadow-[0_6px_24px_rgba(255,86,0,0.4)] hover:scale-105 active:scale-95 duration-150 animate-bounce"
+                  className="w-16 h-16 rounded-full bg-[#FF5600] text-white flex items-center justify-center hover:bg-[#E04D00] transition-all shadow-[0_4px_16px_rgba(255,86,0,0.35)] hover:scale-105 active:scale-95 duration-150"
                   title="Resume workout"
                 >
-                  <Play className="w-10 h-10 fill-white ml-1" />
+                  <Play className="w-6 h-6 fill-white ml-0.5" />
                 </button>
               )}
 
               {/* Photo Capture Button */}
               <button
                 onClick={handleCapturePhoto}
-                className="w-16 h-16 rounded-full border border-[#E2E8F0] bg-white text-[#0F172A] flex items-center justify-center hover:bg-[#F1F5F9] transition-colors shadow-md active:scale-95 relative"
+                className="w-12 h-12 rounded-full border border-[#E2E8F0] dark:border-[#334155] bg-white dark:bg-[#151D2A] text-[#0F172A] dark:text-white flex items-center justify-center hover:bg-[#F1F5F9] dark:hover:bg-[#1E293B] transition-colors shadow-xs active:scale-95 relative"
                 title="Take photo"
               >
-                <Camera className="w-6 h-6" />
+                <Camera className="w-4 h-4" />
                 {capturedPhotos.length > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-[#FF5600] text-white text-[10px] w-5 h-5 rounded-full flex items-center justify-center font-bold">
+                  <span className="absolute -top-0.5 -right-0.5 bg-[#FF5600] text-white text-[9px] w-4 h-4 rounded-full flex items-center justify-center font-bold">
                     {capturedPhotos.length}
                   </span>
                 )}
@@ -777,23 +776,23 @@ export const WorkoutTracker: React.FC<WorkoutTrackerProps> = ({
 
       {/* Finish & Save Workout Modal */}
       {status === 'finishing' && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl border border-[#E2E8F0] shadow-2xl p-6 md:p-8 max-w-lg w-full space-y-6 animate-in fade-in zoom-in duration-200 max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-3">
+          <div className="bg-white dark:bg-[#151D2A] rounded-xl border border-[#E2E8F0] dark:border-[#1E293B] shadow-2xl p-5 md:p-6 max-w-md w-full space-y-4 max-h-[90vh] overflow-y-auto">
             <div className="text-center">
-              <div className="w-14 h-14 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-3">
-                <CheckCircle2 className="w-8 h-8" />
+              <div className="w-10 h-10 bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 rounded-full flex items-center justify-center mx-auto mb-2">
+                <CheckCircle2 className="w-6 h-6" />
               </div>
-              <h2 className="text-2xl font-black text-[#0F172A]">Complete Workout?</h2>
-              <p className="text-sm text-[#64748B] mt-1">
-                You tracked <span className="font-bold text-[#0F172A]">{distFormatted.full}</span> in{' '}
-                <span className="font-bold text-[#0F172A]">{formatTime(seconds)}</span> across{' '}
-                <span className="font-bold text-[#0F172A]">{resolvedLocationName}</span>.
+              <h2 className="text-lg sm:text-xl font-black text-[#0F172A] dark:text-white">Complete Workout?</h2>
+              <p className="text-xs text-[#64748B] dark:text-[#94A3B8] mt-0.5">
+                You tracked <span className="font-bold text-[#0F172A] dark:text-white">{distFormatted.full}</span> in{' '}
+                <span className="font-bold text-[#0F172A] dark:text-white">{formatTime(seconds)}</span> across{' '}
+                <span className="font-bold text-[#0F172A] dark:text-white">{resolvedLocationName}</span>.
               </p>
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-3">
               <div>
-                <label className="block text-xs font-bold text-[#64748B] uppercase mb-1">
+                <label className="block text-[10px] font-bold text-[#64748B] dark:text-[#94A3B8] uppercase mb-1">
                   Activity Title
                 </label>
                 <input
@@ -801,35 +800,35 @@ export const WorkoutTracker: React.FC<WorkoutTrackerProps> = ({
                   value={workoutTitle}
                   onChange={(e) => setWorkoutTitle(e.target.value)}
                   placeholder="e.g. Morning River Trail Run"
-                  className="w-full bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg px-4 py-2.5 text-[#0F172A] text-sm focus:outline-none focus:border-[#FF5600]"
+                  className="w-full bg-[#F8FAFC] dark:bg-[#1E293B] border border-[#E2E8F0] dark:border-[#334155] rounded-lg px-3 py-1.5 text-[#0F172A] dark:text-white text-xs focus:outline-none focus:border-[#FF5600]"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-[#64748B] uppercase mb-1">
+                <label className="block text-[10px] font-bold text-[#64748B] dark:text-[#94A3B8] uppercase mb-1">
                   Workout Description / Notes
                 </label>
                 <textarea
                   value={workoutNotes}
                   onChange={(e) => setWorkoutNotes(e.target.value)}
                   placeholder="How did your workout feel? Any personal bests?"
-                  rows={3}
-                  className="w-full bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg px-4 py-2.5 text-[#0F172A] text-sm focus:outline-none focus:border-[#FF5600]"
+                  rows={2}
+                  className="w-full bg-[#F8FAFC] dark:bg-[#1E293B] border border-[#E2E8F0] dark:border-[#334155] rounded-lg px-3 py-1.5 text-[#0F172A] dark:text-white text-xs focus:outline-none focus:border-[#FF5600]"
                 />
               </div>
 
               {/* Recorded Splits Snapshot */}
               {splits.length > 0 && (
                 <div>
-                  <label className="block text-xs font-bold text-[#64748B] uppercase mb-1">
+                  <label className="block text-[10px] font-bold text-[#64748B] dark:text-[#94A3B8] uppercase mb-1">
                     Recorded Splits ({splits.length})
                   </label>
-                  <div className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg p-2.5 max-h-28 overflow-y-auto divide-y divide-[#E2E8F0]">
+                  <div className="bg-[#F8FAFC] dark:bg-[#1E293B] border border-[#E2E8F0] dark:border-[#334155] rounded-lg p-2 max-h-24 overflow-y-auto divide-y divide-[#E2E8F0] dark:divide-[#334155]">
                     {splits.map((s, idx) => (
-                      <div key={idx} className="flex justify-between text-xs py-1">
-                        <span className="font-semibold text-[#0F172A]">KM {s.split}</span>
-                        <span className="font-mono text-[#0059b0]">{s.pace}</span>
-                        <span className="text-[#64748B]">{s.time}</span>
+                      <div key={idx} className="flex justify-between text-[11px] py-0.5">
+                        <span className="font-semibold text-[#0F172A] dark:text-white">KM {s.split}</span>
+                        <span className="font-mono text-[#0059b0] dark:text-blue-400">{s.pace}</span>
+                        <span className="text-[#64748B] dark:text-[#94A3B8]">{s.time}</span>
                       </div>
                     ))}
                   </div>
@@ -838,16 +837,16 @@ export const WorkoutTracker: React.FC<WorkoutTrackerProps> = ({
 
               {capturedPhotos.length > 0 && (
                 <div>
-                  <label className="block text-xs font-bold text-[#64748B] uppercase mb-1">
+                  <label className="block text-[10px] font-bold text-[#64748B] dark:text-[#94A3B8] uppercase mb-1">
                     Captured Photos ({capturedPhotos.length})
                   </label>
-                  <div className="flex gap-2 overflow-x-auto py-1">
+                  <div className="flex gap-1.5 overflow-x-auto py-1">
                     {capturedPhotos.map((p, idx) => (
                       <img
                         key={idx}
                         src={p}
                         alt="Captured"
-                        className="w-16 h-16 object-cover rounded-lg border border-[#E2E8F0]"
+                        className="w-12 h-12 object-cover rounded-lg border border-[#E2E8F0] dark:border-[#334155]"
                       />
                     ))}
                   </div>
@@ -855,18 +854,18 @@ export const WorkoutTracker: React.FC<WorkoutTrackerProps> = ({
               )}
             </div>
 
-            <div className="grid grid-cols-2 gap-3 pt-2">
+            <div className="grid grid-cols-2 gap-2 pt-1">
               <button
                 onClick={() => setStatus('recording')}
-                className="py-3 rounded-lg border border-[#E2E8F0] font-bold text-sm text-[#64748B] hover:bg-[#F1F5F9] transition-colors"
+                className="py-2 rounded-lg border border-[#E2E8F0] dark:border-[#334155] font-bold text-xs text-[#64748B] dark:text-[#94A3B8] hover:bg-[#F1F5F9] dark:hover:bg-[#1E293B] transition-colors"
               >
                 Resume
               </button>
               <button
                 onClick={handleSaveAndExit}
-                className="py-3 rounded-lg bg-[#FF5600] text-white font-bold text-sm hover:bg-[#E04D00] shadow-md transition-colors flex items-center justify-center gap-2"
+                className="py-2 rounded-lg bg-[#FF5600] text-white font-bold text-xs hover:bg-[#E04D00] shadow-xs transition-colors flex items-center justify-center gap-1.5"
               >
-                <Sparkles className="w-4 h-4" /> Save & Review
+                <Sparkles className="w-3.5 h-3.5" /> Save & Review
               </button>
             </div>
           </div>
