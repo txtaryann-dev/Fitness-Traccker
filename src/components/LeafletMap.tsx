@@ -18,6 +18,9 @@ interface LeafletMapProps {
   enableLayerSwitcher?: boolean;
   enableRecenterButton?: boolean;
   onRecenter?: () => void;
+  animateRoute?: boolean;
+  animationDuration?: number; // in ms, default 1600
+  replayKey?: number | string;
 }
 
 const TILE_LAYERS: Record<MapTileStyle, { url: string; maxZoom: number; subdomains?: string; attribution?: string }> = {
@@ -54,20 +57,27 @@ export const LeafletMap: React.FC<LeafletMapProps> = ({
   enableLayerSwitcher = false,
   enableRecenterButton = false,
   onRecenter,
+  animateRoute = false,
+  animationDuration = 1600,
+  replayKey,
 }) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
   const tileLayerRef = useRef<L.TileLayer | null>(null);
   const polylineRef = useRef<L.Polyline | null>(null);
+  const bgPolylineRef = useRef<L.Polyline | null>(null);
+  const runnerMarkerRef = useRef<L.CircleMarker | null>(null);
   const liveMarkerRef = useRef<L.CircleMarker | null>(null);
   const accuracyCircleRef = useRef<L.Circle | null>(null);
   const headingMarkerRef = useRef<L.Marker | null>(null);
   const startMarkerRef = useRef<L.CircleMarker | null>(null);
   const finishMarkerRef = useRef<L.CircleMarker | null>(null);
+  const animFrameIdRef = useRef<number | null>(null);
 
   const [activeStyle, setActiveStyle] = useState<MapTileStyle>('streets');
   const [showStyleMenu, setShowStyleMenu] = useState(false);
   const [isFollowingGps, setIsFollowingGps] = useState(true);
+  const [isAnimating, setIsAnimating] = useState(false);
 
   const fallbackCenter: [number, number] =
     liveCurrentPosition
@@ -149,14 +159,26 @@ export const LeafletMap: React.FC<LeafletMapProps> = ({
     tileLayerRef.current = newLayer;
   }, [activeStyle]);
 
-  // Update Route Polyline & Start/End Markers
+  // Update Route Polyline & Start/End Markers (with smooth drawing animation if enabled)
   useEffect(() => {
     const map = mapInstanceRef.current;
     if (!map) return;
 
+    if (animFrameIdRef.current) {
+      cancelAnimationFrame(animFrameIdRef.current);
+      animFrameIdRef.current = null;
+    }
     if (polylineRef.current) {
       map.removeLayer(polylineRef.current);
       polylineRef.current = null;
+    }
+    if (bgPolylineRef.current) {
+      map.removeLayer(bgPolylineRef.current);
+      bgPolylineRef.current = null;
+    }
+    if (runnerMarkerRef.current) {
+      map.removeLayer(runnerMarkerRef.current);
+      runnerMarkerRef.current = null;
     }
     if (startMarkerRef.current) {
       map.removeLayer(startMarkerRef.current);
@@ -170,52 +192,200 @@ export const LeafletMap: React.FC<LeafletMapProps> = ({
     if (coordinates && coordinates.length > 1) {
       const latlngs: [number, number][] = coordinates.map((c) => [c.lat, c.lng]);
 
-      const polyline = L.polyline(latlngs, {
-        color: '#FF5600',
-        weight: 5,
-        opacity: 0.95,
-        lineCap: 'round',
-        lineJoin: 'round',
-      }).addTo(map);
+      // If animated route transition requested
+      if (animateRoute) {
+        setIsAnimating(true);
 
-      polylineRef.current = polyline;
+        // Frame the bounds immediately
+        try {
+          map.fitBounds(L.latLngBounds(latlngs), {
+            padding: [35, 35],
+            maxZoom: 16,
+          });
+        } catch {
+          // ignore
+        }
 
-      // Start pin (green dot with outer halo)
-      const start = latlngs[0];
-      const startMarker = L.circleMarker(start, {
-        radius: 7,
-        fillColor: '#10B981',
-        fillOpacity: 1,
-        color: '#FFFFFF',
-        weight: 2.5,
-      }).addTo(map);
-      startMarkerRef.current = startMarker;
+        // Faint outline of whole course
+        const bgPolyline = L.polyline(latlngs, {
+          color: '#FF5600',
+          weight: 4,
+          opacity: 0.22,
+          dashArray: '5, 6',
+          lineCap: 'round',
+          lineJoin: 'round',
+        }).addTo(map);
+        bgPolylineRef.current = bgPolyline;
 
-      // Finish pin (orange dot with outer halo)
-      if (!showLiveMarker) {
-        const end = latlngs[latlngs.length - 1];
-        const finishMarker = L.circleMarker(end, {
+        // Start Pin (green dot)
+        const start = latlngs[0];
+        const startMarker = L.circleMarker(start, {
           radius: 7,
-          fillColor: '#FF5600',
+          fillColor: '#10B981',
           fillOpacity: 1,
           color: '#FFFFFF',
           weight: 2.5,
         }).addTo(map);
-        finishMarkerRef.current = finishMarker;
+        startMarkerRef.current = startMarker;
 
-        try {
-          map.fitBounds(polyline.getBounds(), {
-            padding: [30, 30],
-            maxZoom: 16,
-          });
-        } catch {
-          // ignore bounds calc error during transitions
+        // Active drawing polyline
+        const activePolyline = L.polyline([start], {
+          color: '#FF5600',
+          weight: 5,
+          opacity: 0.95,
+          lineCap: 'round',
+          lineJoin: 'round',
+        }).addTo(map);
+        polylineRef.current = activePolyline;
+
+        // Leading edge tracer head
+        const runnerMarker = L.circleMarker(start, {
+          radius: 6,
+          fillColor: '#FFFFFF',
+          fillOpacity: 1,
+          color: '#FF5600',
+          weight: 3,
+        }).addTo(map);
+        runnerMarkerRef.current = runnerMarker;
+
+        // Calculate cumulative segment distances
+        const segmentDistances: number[] = [];
+        let totalDistance = 0;
+        for (let i = 0; i < coordinates.length - 1; i++) {
+          const p1 = coordinates[i];
+          const p2 = coordinates[i + 1];
+          const dist = Math.hypot(p2.lat - p1.lat, p2.lng - p1.lng);
+          segmentDistances.push(dist);
+          totalDistance += dist;
+        }
+
+        let startTime: number | null = null;
+        const duration = animationDuration || 1600;
+
+        const animate = (currentTime: number) => {
+          if (!startTime) startTime = currentTime;
+          const elapsed = currentTime - startTime;
+          const rawProgress = Math.min(1, elapsed / duration);
+          // Ease-out cubic curve for smooth acceleration & graceful decelerating arrival
+          const progress = 1 - Math.pow(1 - rawProgress, 3);
+          const currentTargetDist = progress * totalDistance;
+
+          let accumulated = 0;
+          const currentPath: [number, number][] = [latlngs[0]];
+          let tipPos: [number, number] = latlngs[0];
+
+          for (let i = 0; i < segmentDistances.length; i++) {
+            const segDist = segmentDistances[i];
+            if (accumulated + segDist <= currentTargetDist) {
+              accumulated += segDist;
+              currentPath.push(latlngs[i + 1]);
+              tipPos = latlngs[i + 1];
+            } else {
+              const remaining = currentTargetDist - accumulated;
+              const fraction = segDist > 0 ? remaining / segDist : 0;
+              const p1 = coordinates[i];
+              const p2 = coordinates[i + 1];
+              const curLat = p1.lat + (p2.lat - p1.lat) * fraction;
+              const curLng = p1.lng + (p2.lng - p1.lng) * fraction;
+              tipPos = [curLat, curLng];
+              currentPath.push(tipPos);
+              break;
+            }
+          }
+
+          activePolyline.setLatLngs(currentPath);
+          if (runnerMarkerRef.current) {
+            runnerMarkerRef.current.setLatLng(tipPos);
+          }
+
+          if (rawProgress < 1) {
+            animFrameIdRef.current = requestAnimationFrame(animate);
+          } else {
+            // Finalize drawing
+            activePolyline.setLatLngs(latlngs);
+            if (runnerMarkerRef.current) {
+              map.removeLayer(runnerMarkerRef.current);
+              runnerMarkerRef.current = null;
+            }
+            if (bgPolylineRef.current) {
+              map.removeLayer(bgPolylineRef.current);
+              bgPolylineRef.current = null;
+            }
+
+            // Finish Pin (orange dot with outer ring)
+            const end = latlngs[latlngs.length - 1];
+            const finishMarker = L.circleMarker(end, {
+              radius: 7,
+              fillColor: '#FF5600',
+              fillOpacity: 1,
+              color: '#FFFFFF',
+              weight: 2.5,
+            }).addTo(map);
+            finishMarkerRef.current = finishMarker;
+            setIsAnimating(false);
+          }
+        };
+
+        const timeoutId = setTimeout(() => {
+          animFrameIdRef.current = requestAnimationFrame(animate);
+        }, 80);
+
+        return () => {
+          clearTimeout(timeoutId);
+          if (animFrameIdRef.current) {
+            cancelAnimationFrame(animFrameIdRef.current);
+            animFrameIdRef.current = null;
+          }
+        };
+      } else {
+        // Standard instant rendering without animation
+        const polyline = L.polyline(latlngs, {
+          color: '#FF5600',
+          weight: 5,
+          opacity: 0.95,
+          lineCap: 'round',
+          lineJoin: 'round',
+        }).addTo(map);
+
+        polylineRef.current = polyline;
+
+        // Start pin
+        const start = latlngs[0];
+        const startMarker = L.circleMarker(start, {
+          radius: 7,
+          fillColor: '#10B981',
+          fillOpacity: 1,
+          color: '#FFFFFF',
+          weight: 2.5,
+        }).addTo(map);
+        startMarkerRef.current = startMarker;
+
+        // Finish pin
+        if (!showLiveMarker) {
+          const end = latlngs[latlngs.length - 1];
+          const finishMarker = L.circleMarker(end, {
+            radius: 7,
+            fillColor: '#FF5600',
+            fillOpacity: 1,
+            color: '#FFFFFF',
+            weight: 2.5,
+          }).addTo(map);
+          finishMarkerRef.current = finishMarker;
+
+          try {
+            map.fitBounds(polyline.getBounds(), {
+              padding: [30, 30],
+              maxZoom: 16,
+            });
+          } catch {
+            // ignore
+          }
         }
       }
     } else if (coordinates && coordinates.length === 1 && !showLiveMarker) {
       map.setView([coordinates[0].lat, coordinates[0].lng], 16);
     }
-  }, [coordinates, showLiveMarker]);
+  }, [coordinates, showLiveMarker, animateRoute, animationDuration, replayKey]);
 
   // Update Live GPS Location Marker & Accuracy Circle
   useEffect(() => {

@@ -58,37 +58,37 @@ export const PerformanceChart: React.FC<PerformanceChartProps> = ({
   const areaString = `${pathString} L 100 60 L 0 60 Z`;
 
   return (
-    <div className={`bg-white dark:bg-[#151D2A] p-4 md:p-5 rounded-xl border border-[#E2E8F0] dark:border-[#1E293B] shadow-xs flex flex-col gap-3 ${className}`}>
+    <div className={`bg-white/75 dark:bg-[#151D2A]/75 backdrop-blur-xl p-5 md:p-6 rounded-3xl border border-slate-200/60 dark:border-white/10 shadow-xl shadow-slate-900/5 dark:shadow-black/20 flex flex-col gap-4 transition-all hover:scale-[1.01] ${className}`}>
       <div className="flex justify-between items-center">
         <div>
-          <h3 className="text-sm font-bold text-[#0F172A] dark:text-white">
+          <h3 className="text-sm font-black text-[#0F172A] dark:text-white tracking-tight">
             {activeMetric === 'pace' ? 'Pace over Time' : 'Elevation Profile'}
           </h3>
-          <p className="text-[11px] text-[#64748B] dark:text-[#94A3B8]">
-            {activeMetric === 'pace' ? 'Smoothed minute pacing curve' : 'Climb & descent topography'}
+          <p className="text-[11px] text-[#64748B] dark:text-[#94A3B8] font-medium">
+            {activeMetric === 'pace' ? 'Smoothed dynamic pacing curve' : 'Topographical climb & descent profile'}
           </p>
         </div>
 
-        <div className="flex items-center gap-0.5 bg-[#F8FAFC] dark:bg-[#1E293B] p-0.5 rounded-lg border border-[#E2E8F0] dark:border-[#334155]">
+        <div className="flex items-center gap-1 bg-slate-100/80 dark:bg-white/5 p-1 rounded-full border border-slate-200/60 dark:border-white/10 shadow-xs">
           <button
             onClick={() => setActiveMetric('pace')}
-            className={`px-2 py-0.5 text-[11px] font-bold rounded transition-colors ${
+            className={`px-3 py-1 text-[10px] font-extrabold rounded-full uppercase tracking-wider transition-all ${
               activeMetric === 'pace'
-                ? 'bg-[#FF5600] text-white shadow-xs'
+                ? 'bg-[#FF5600] text-white shadow-xs shadow-orange-500/30'
                 : 'text-[#64748B] dark:text-[#94A3B8] hover:text-[#0F172A] dark:hover:text-white'
             }`}
           >
-            PACE
+            Pace
           </button>
           <button
             onClick={() => setActiveMetric('elevation')}
-            className={`px-2 py-0.5 text-[11px] font-bold rounded transition-colors ${
+            className={`px-3 py-1 text-[10px] font-extrabold rounded-full uppercase tracking-wider transition-all ${
               activeMetric === 'elevation'
-                ? 'bg-[#FF5600] text-white shadow-xs'
+                ? 'bg-[#FF5600] text-white shadow-xs shadow-orange-500/30'
                 : 'text-[#64748B] dark:text-[#94A3B8] hover:text-[#0F172A] dark:hover:text-white'
             }`}
           >
-            ELEVATION
+            Elevation
           </button>
         </div>
       </div>
@@ -96,10 +96,10 @@ export const PerformanceChart: React.FC<PerformanceChartProps> = ({
       {/* Chart Visualization */}
       <div className="w-full h-36 relative flex items-end pt-2">
         {/* Horizontal grid lines */}
-        <div className="absolute inset-0 flex flex-col justify-between border-l border-[#E2E8F0] dark:border-[#334155] pb-5 pointer-events-none">
-          <div className="w-full border-t border-dashed border-[#E2E8F0] dark:border-[#334155] h-0"></div>
-          <div className="w-full border-t border-dashed border-[#E2E8F0] dark:border-[#334155] h-0"></div>
-          <div className="w-full border-t border-[#E2E8F0] dark:border-[#334155] h-0"></div>
+        <div className="absolute inset-0 flex flex-col justify-between border-l border-slate-200/60 dark:border-white/10 pb-5 pointer-events-none">
+          <div className="w-full border-t border-dashed border-slate-200/50 dark:border-white/10 h-0"></div>
+          <div className="w-full border-t border-dashed border-slate-200/50 dark:border-white/10 h-0"></div>
+          <div className="w-full border-t border-slate-200/60 dark:border-white/10 h-0"></div>
         </div>
 
         {/* SVG Curve */}
@@ -111,7 +111,7 @@ export const PerformanceChart: React.FC<PerformanceChartProps> = ({
           >
             <defs>
               <linearGradient id="velocityChartGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#FF5600" stopOpacity="0.25" />
+                <stop offset="0%" stopColor="#FF5600" stopOpacity="0.3" />
                 <stop offset="100%" stopColor="#FF5600" stopOpacity="0.0" />
               </linearGradient>
             </defs>
@@ -124,7 +124,7 @@ export const PerformanceChart: React.FC<PerformanceChartProps> = ({
               d={pathString}
               fill="none"
               stroke="#FF5600"
-              strokeWidth="2"
+              strokeWidth="2.5"
               vectorEffect="non-scaling-stroke"
             />
 
@@ -134,11 +134,11 @@ export const PerformanceChart: React.FC<PerformanceChartProps> = ({
                 <circle
                   cx={pt.x}
                   cy={pt.y}
-                  r="3"
+                  r="3.5"
                   fill="#FF5600"
                   stroke="#FFFFFF"
-                  strokeWidth="1.5"
-                  className="cursor-pointer hover:r-4.5 transition-all"
+                  strokeWidth="2"
+                  className="cursor-pointer hover:r-5 transition-all drop-shadow-xs"
                   onMouseEnter={() =>
                     setHoveredPoint({
                       x: pt.x,
@@ -159,17 +159,17 @@ export const PerformanceChart: React.FC<PerformanceChartProps> = ({
           {/* Hover Tooltip */}
           {hoveredPoint && (
             <div
-              className="absolute pointer-events-none bg-[#0F172A] text-white text-[10px] px-2 py-0.5 rounded shadow-lg -translate-x-1/2 -translate-y-full z-20"
+              className="absolute pointer-events-none bg-slate-900/95 dark:bg-black/90 backdrop-blur-md text-white text-[10px] px-2.5 py-1 rounded-xl shadow-xl -translate-x-1/2 -translate-y-full z-20 border border-white/10"
               style={{ left: `${hoveredPoint.x}%`, top: `${hoveredPoint.y}%` }}
             >
               <div className="font-bold">{hoveredPoint.val}</div>
-              <div className="text-[9px] text-gray-300">at {hoveredPoint.time}</div>
+              <div className="text-[9px] text-slate-300">at {hoveredPoint.time}</div>
             </div>
           )}
         </div>
 
         {/* X-Axis labels */}
-        <div className="absolute bottom-0 left-0 w-full flex justify-between text-[10px] font-medium text-[#64748B] dark:text-[#94A3B8]">
+        <div className="absolute bottom-0 left-0 w-full flex justify-between text-[10px] font-semibold text-[#64748B] dark:text-[#94A3B8]">
           <span>0m</span>
           <span>{Math.round(totalTimeMinutes * 0.25)}m</span>
           <span>{Math.round(totalTimeMinutes * 0.5)}m</span>

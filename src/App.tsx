@@ -42,14 +42,19 @@ const AppContent: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#0B0F17] text-[#0F172A] dark:text-[#F8FAFC] flex flex-col font-sans transition-colors duration-200 selection:bg-[#FF5600] selection:text-white">
+    <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#0B0F17] text-[#0F172A] dark:text-[#F8FAFC] flex flex-col font-sans transition-colors duration-300 selection:bg-[#FF5600] selection:text-white relative overflow-x-hidden">
+      {/* Subtle Atmospheric Ambient Background Glows */}
+      <div className="fixed top-0 left-1/4 w-96 h-96 bg-[#FF5600]/5 dark:bg-[#FF5600]/10 rounded-full blur-3xl pointer-events-none -z-10" />
+      <div className="fixed top-1/3 right-10 w-[30rem] h-[30rem] bg-blue-500/5 dark:bg-blue-600/10 rounded-full blur-3xl pointer-events-none -z-10" />
+      <div className="fixed bottom-10 left-1/3 w-80 h-80 bg-orange-400/5 dark:bg-orange-500/5 rounded-full blur-3xl pointer-events-none -z-10" />
+
       {/* Top and Mobile Navigation (hidden on full-screen workout recording or summary) */}
       {activeTab !== 'record' && activeTab !== 'summary' && (
         <Navbar onOpenRecord={handleOpenRecord} />
       )}
 
       {/* Main Viewport Container */}
-      <main className="flex-1 w-full max-w-6xl mx-auto px-3 sm:px-5 lg:px-6 pt-4 pb-8">
+      <main className="flex-1 w-full max-w-6xl mx-auto px-3 sm:px-5 lg:px-6 pt-5 pb-10">
         {activeTab === 'home' && (
           <HomeFeedView
             onOpenRecord={handleOpenRecord}
